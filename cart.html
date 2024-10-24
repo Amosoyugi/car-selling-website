@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart - CarZone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('background.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            position: relative;
+            text-align: center; /* Center text */
+        }
+
+        .back-button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1em;
+            cursor: pointer;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 5px;
+            position: absolute; /* Position it absolutely within the header */
+            top: 15px; /* Adjust vertical position */
+            left: 20px; /* Adjust horizontal position */
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .cart-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .cart-info {
+            flex-grow: 1;
+            margin-left: 20px;
+        }
+
+        .remove-button, .purchase-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+
+        .purchase-button {
+            background-color: #4CAF50; /* Green color for the purchase button */
+        }
+    </style>
+    <script>
+        // Retrieve cart data from local storage
+        function loadCart() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartList = document.getElementById('cart-list');
+
+            cartList.innerHTML = ''; // Clear the existing list
+
+            cart.forEach((item, index) => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('cart-item');
+
+                // Car image
+                const carImage = document.createElement('img');
+                carImage.src = item.image;
+                listItem.appendChild(carImage);
+
+                // Car info
+                const carInfo = document.createElement('div');
+                carInfo.classList.add('cart-info');
+                carInfo.innerHTML = `<h3>${item.name}</h3><p>Price: $${item.price}</p>`;
+                listItem.appendChild(carInfo);
+
+                // Remove button
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.classList.add('remove-button');
+                removeButton.onclick = () => removeFromCart(index);
+                
+                listItem.appendChild(removeButton);
+
+                // Purchase button
+                const purchaseButton = document.createElement('button');
+                purchaseButton.textContent = 'Purchase';
+                purchaseButton.classList.add('purchase-button');
+                purchaseButton.onclick = () => purchaseItem(item);
+                
+                listItem.appendChild(purchaseButton);
+                cartList.appendChild(listItem);
+            });
+        }
+
+        // Remove item from cart and update local storage
+        function removeFromCart(index) {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart(); // Refresh the cart view
+        }
+
+        // Function to handle item purchase
+        function purchaseItem(item) {
+            // Redirect to a new purchase page (e.g., purchase.html)
+            window.location.href = `purchase.html?item=${encodeURIComponent(item.name)}&price=${item.price}`;
+        }
+
+        // Load the cart when the page is loaded
+        window.onload = loadCart;
+    </script>
+</head>
+<body>
+    <header>
+        <a href="catalog.html" class="back-button">Back to Catalog</a>
+        <h1>Your Cart</h1>
+    </header>
+
+    <div class="container">
+        <h2>Your Cart Items</h2>
+        <ul id="cart-list"></ul>
+    </div>
+</body>
+</html>
